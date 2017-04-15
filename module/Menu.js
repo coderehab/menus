@@ -48,8 +48,8 @@ export default class Menu {
     document.addEventListener('touchmove', this.onTouchMove.bind(this), false);
 
     document.addEventListener('mousedown', function(e){
-      var hide = this.menu.classList.contains('active');
-      if(!hide) return;
+      var hide = true; //this.menu.classList.contains('active');
+      //if(!hide) return;
 
       for(var i = 0; i < e.path.length; i++ ){
         if(
@@ -101,6 +101,7 @@ export default class Menu {
   toggle(){
     this.menu.classList.toggle('active')
     document.body.classList.toggle('scroll-disabled');
+    document.body.classList.toggle('menu-open');
     if(!this.menu.classList.contains('active')){
       for(var i = 0; i < this.submenus.length; i++){
         this.closeSubmenu(this.submenus[i]);
@@ -111,6 +112,7 @@ export default class Menu {
   open(){
     this.menu.classList.add('active')
     document.body.classList.add('scroll-disabled');
+    document.body.classList.add('menu-open');
   }
 
   close(){
@@ -119,6 +121,7 @@ export default class Menu {
     }
     this.menu.classList.remove('active')
     document.body.classList.remove('scroll-disabled');
+    document.body.classList.remove('menu-open');
   }
 
   toggleSubmenu(submenu){

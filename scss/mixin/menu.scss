@@ -1,5 +1,7 @@
 @mixin menu($selector, $screens){
   #{$selector} {
+    z-index: 3001;
+
     .sub-menu{
       visibility: hidden;
     }
