@@ -1,10 +1,10 @@
 @mixin menu($selector, $screens){
   #{$selector} {
     .sub-menu{
-      display: none;
+      visibility: hidden;
     }
     .active{
-      display: block;
+      visibility: visible;
     }
 
     @each $theme, $size in $screens{

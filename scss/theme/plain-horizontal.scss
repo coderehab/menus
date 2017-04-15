@@ -1,0 +1,55 @@
+$theme: "plain-horizontal";
+$config: map-get($menu-config, $theme);
+
+%menu-theme-#{$theme}{
+  @include menu-breakpoint($theme){
+    @include clean();
+
+    ul{
+      display: flex;
+    }
+    li {
+      a{
+        display: block;
+        padding:0.8em 1em;
+      }
+      ul:not(.active){
+        //max-height: 0!important;
+      }
+      ul{
+        position: absolute;
+        transition: all 0.3s;
+        //overflow: hidden;
+        background: #fff;
+        display: block;
+        min-width: 200px;
+        transform-origin: top;
+        transform: scaleY(0);
+        border: 1px solid #e5e5e5;
+        border-top: none;
+        &.active{
+          transform: scaleY(1);
+        }
+      }
+    }
+
+    li ul li {
+      position: relative;
+      a{
+      border-top: 1px solid #e5e5e5;
+    }
+      ul:not(.active){
+        max-height: 0!important;
+      }
+      ul{
+        top:0;
+        left:100%;
+        position: absolute;
+        transition: all 0.3s;
+        overflow: hidden;
+        background: #fff;
+        display: block;
+      }
+    }
+  }
+}

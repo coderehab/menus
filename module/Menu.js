@@ -4,7 +4,7 @@ export default class Menu {
     var selectors = this.settings.selectors;
 
     //init Menu
-    this.menu = document.querySelector(selectors.menu);
+    this.menu = document.getElementById(selectors.menu_id);
     if(!this.menu) {
       console.error("unable to find the menu with selector: " + selectors.menu);
       return;
@@ -15,6 +15,11 @@ export default class Menu {
     if(this.menuitems.length)
     for(var i=0; i < this.menuitems.length; i++){
       this.menuitems[i].addEventListener("click", this.onMenuItemClick.bind(this));
+    }
+
+    if(this.submenus.length)
+    for(var i=0; i < this.submenus.length; i++){
+      this.calculateMaxHeight(this.submenus[i]);
     }
 
     // init toggleButtons
@@ -42,7 +47,20 @@ export default class Menu {
     document.addEventListener('touchstart', this.onTouchStart.bind(this), false);
     document.addEventListener('touchmove', this.onTouchMove.bind(this), false);
 
-    console.log(this);
+    document.addEventListener('mousedown', function(e){
+      var hide = this.menu.classList.contains('active');
+      if(!hide) return;
+
+      for(var i = 0; i < e.path.length; i++ ){
+        if(
+          e.path[i].id == this.settings.selectors.menu_id ||
+          e.path[i].classList && e.path[i].classList.contains('menu-toggle-button')
+        )
+        hide = false;
+      }
+
+      if(hide) this.close();
+    }.bind(this))
   }
 
   config (args = {}) {
@@ -51,7 +69,7 @@ export default class Menu {
         can_open_multiple: false,
       },
       selectors:{
-        menu: '#main-menu',
+        menu_id: 'main-menu',
         menuitem: 'li',
         submenu: '.menu-item > ul',
         toggle_button: '.menu-toggle-button',
@@ -71,7 +89,10 @@ export default class Menu {
 
   onMenuItemClick (e){
     var submenu = e.target.parentNode.querySelector(this.settings.selectors.submenu);
-    if(!submenu) return;
+    if(!submenu) {
+      this.close();
+      return;
+    }
 
     e.preventDefault();
     this.toggleSubmenu(submenu);
@@ -101,7 +122,8 @@ export default class Menu {
   }
 
   toggleSubmenu(submenu){
-    this.can_open_multiple();
+    if(!submenu.classList.contains('active'))
+    this.can_open_multiple(this.closest(submenu, submenu.className));
     submenu.classList.toggle('active');
   }
 
@@ -121,32 +143,32 @@ export default class Menu {
 
   onTouchMove (evt) {
     if ( ! this.xDown || ! this.yDown ) {
-			return;
-		}
+      return;
+    }
 
-		var xUp = evt.touches[0].clientX;
-		var yUp = evt.touches[0].clientY;
+    var xUp = evt.touches[0].clientX;
+    var yUp = evt.touches[0].clientY;
 
-		var xDiff = this.xDown - xUp;
-		var yDiff = this.yDown - yUp;
+    var xDiff = this.xDown - xUp;
+    var yDiff = this.yDown - yUp;
 
-		if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {
-			if ( xDiff > 0 ) {
-				this.onSwipeLeft();
-			} else {
-				this.onSwipeRight();
-			}
-		} else {
-			if ( yDiff > 0 ) {
-				this.onSwipeUp();
-			} else {
-				this.onSwipeDown();
-			}
-		}
+    if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {
+      if ( xDiff > 0 ) {
+        this.onSwipeLeft();
+      } else {
+        this.onSwipeRight();
+      }
+    } else {
+      if ( yDiff > 0 ) {
+        this.onSwipeUp();
+      } else {
+        this.onSwipeDown();
+      }
+    }
 
-		/* reset values */
-		this.xDown = null;
-		this.yDown = null;
+    /* reset values */
+    this.xDown = null;
+    this.yDown = null;
   }
 
   onSwipeLeft(){
@@ -161,11 +183,37 @@ export default class Menu {
 
   onSwipeDown(){}
 
-  can_open_multiple(){
+  can_open_multiple(parentMenu){
     if(!this.settings.submenu.can_open_multiple){
       for(var i = 0; i < this.submenus.length; i++){
-        this.closeSubmenu(this.submenus[i]);
+        if(parentMenu != this.submenus[i])
+          this.closeSubmenu(this.submenus[i]);
       }
+    }
+  }
+
+  calculateMaxHeight(submenu) {
+    submenu.classList.add('active');
+    var menuitems = submenu.children;
+    for (var i = 0; i< this.menuitems.length; i++){
+      if(this.closest(this.menuitems[i], 'sub-menu'))
+      this.menuitems[i].parentNode.style.maxHeight = this.menuitems[i].clientHeight + "px"
+    }
+    submenu.classList.remove('active');
+    //submenu.style.maxHeight = menuitems.length*menuitems[0].clientHeight + "px";
+  }
+
+  closest(el, classname) {
+    if(el.parentNode && el.parentNode.className){
+      if(el.parentNode.className.indexOf(classname) != -1){
+        return el.parentNode;
+      }
+      else{
+        return this.closest(el.parentNode, classname);
+      }
+    }
+    else{
+      return false;
     }
   }
 }

@@ -5,7 +5,7 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: './index.js',
-  watch: true,
+  watch: false,
   output: {
     filename: 'menu.js',
     path: path.resolve(__dirname, 'dist'),

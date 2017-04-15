@@ -1,9 +1,8 @@
 @import "settings";
+@import "mixin/clean"; 
 @import "mixin/menu-breakpoint";
 @import "mixin/autohide";
 @import "mixin/menu";
 
 @import "theme/aside-left";
 @import "theme/plain-horizontal";
-
-@include menu( "#main-menu", $menu-config);
