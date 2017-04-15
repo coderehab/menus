@@ -6,4 +6,4 @@ if (autoload){
   var menu = new Menu();
 }
  
-export default Menu;
+module.exports = require('./module/Menu.js')
