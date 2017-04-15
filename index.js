@@ -1,8 +1,9 @@
-require('./sass/menu.scss');
-
 import Menu from "./module/Menu.js";
 
-var menu = new Menu({
-  menu_selector: "#main-menu",
-  test:"tester"
-});
+var autoload = false;
+if (autoload){
+  require('./sass/menu.scss');
+  var menu = new Menu();
+}
+ 
+export default Menu;
