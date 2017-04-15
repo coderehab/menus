@@ -1,0 +1,7 @@
+@mixin autohide($config) {
+  @if map-has-key($config, autohide) {
+    @media screen and (max-width: map-get($config, autohide)){
+      @content;
+    }
+  }
+}

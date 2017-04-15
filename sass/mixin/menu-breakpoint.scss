@@ -1,0 +1,13 @@
+@mixin menu-breakpoint($theme) {
+  $screen: map-get($menu-config, $theme);
+
+  @if (map-has-key($screen, min) and map-has-key($screen, max)) {
+    @media screen and (min-width: #{map-get($screen, min)}) and (max-width: #{map-get($screen, max)}){ @content; }
+  }
+  @else if map-has-key($screen, min){
+    @media screen and (min-width: #{map-get($screen, min)}) { @content; }
+  }
+  @else if map-has-key($screen, max){
+    @media screen and (min-width: #{map-get($screen, max)}){ @content; }
+  }
+}

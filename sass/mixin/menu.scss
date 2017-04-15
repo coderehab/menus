@@ -1,0 +1,14 @@
+@mixin menu($selector, $screens){
+  #{$selector} {
+    .sub-menu{
+      display: none;
+    }
+    .active{
+      display: block;
+    }
+
+    @each $theme, $size in $screens{
+      @extend %menu-theme-#{$theme}
+    }
+  }
+};

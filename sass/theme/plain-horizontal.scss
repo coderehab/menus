@@ -1,0 +1,8 @@
+$theme: "plain-horizontal";
+$config: map-get($menu-config, $theme);
+
+%menu-theme-#{$theme}{
+  @include menu-breakpoint($theme){
+    background: #0000ff;
+  }
+}
