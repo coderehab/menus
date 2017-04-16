@@ -15,7 +15,7 @@ There already are a lot of menu packages available across the web. So why build 
 ** TODO **
 + Optimize package and more..
 
-** EXAMPLE: Coming soon **
+** EXAMPLE: [menudemo.rehabproject.nl](http://menudemo.rehabproject.nl) **
 
 ps. This is my first NPM Package.
 Please let me know if you've got some tips!
