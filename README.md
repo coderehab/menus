@@ -1,24 +1,28 @@
 # Menu Package for Webpack.
 
-** NOTE: Package is in development.**
+**NOTE: Package is in development.**
 
 ### Why this package
 There already are a lot of menu packages available across the web. So why build another one? Well, A lot of packages focus on a specific menu layout, are at some point incomplete or not flexibel enough. We would like to change that and create a single menu package that gives front-end developers a set of predefined, responsive menu layouts to start their project with.
 
-** goals **
-+ Create up to 5 (or more) menu themes (SCSS)
-+ Swich themes based on screen resolution (SCSS)
-+ Configurable selectors for menu, menu-item, sub-menu, toggle-button etc.
+**DONE**
+
++ Change menu based on resolution SASS only
 + Create your own menu themes
++ Customizable selectors
++ Basic swipe handling
+
+**TODO**
++ Optimize package
++ Create up to 5 (or more) menu themes (SCSS)
 + Optimize Swipe event usage
++ Optimize Demo page
++ Optimize documentation
++ Create ready to use prebuild package files.
 
-** TODO **
-+ Optimize package and more..
+**EXAMPLE: [menudemo.rehabproject.nl](http://menudemo.rehabproject.nl)**
 
-** EXAMPLE: [menudemo.rehabproject.nl](http://menudemo.rehabproject.nl) **
-
-ps. This is my first NPM Package.
-Please let me know if you've got some tips!
+ps. Like to join the fun? contact us at info@code.rehab;
 
 ## How to use
 
@@ -35,18 +39,53 @@ npm install advanced-menus --save-dev
 
 ```javascript
 
+/*
+DEFAULT CONFIG
+
+{
+	options:{
+		disable_scroll: false,
+		autoclose: true,
+		use_handles: true,
+	},
+	events: {
+		swipeLeft: function(){},
+		swipeRight: function(){},
+		swipeUp: function(){},
+		swipeDown: function(){}
+	},
+	selectors:{
+		menu_id: 'main-menu',
+		menuitem: 'li',
+		submenu: 'li > ul',
+		toggle_button: false,
+		open_button: false,
+		close_button: false,
+	}
+}
+
+*/
+
 	const Menu = require('advanced-menus');
 
-    //defaultconfig
-    var  config = {
-      selectors:{
-        menu_id: 'main-menu',
-        menuitem: 'li',
-        submenu: '.menu-item > ul',
-        toggle_button: '.menu-toggle-button',
-        open_button: '.menu-open-button',
-        close_button: '.menu-close-button',
-    }
+    //menu config;
+    var config = {
+		  selectors:{
+		    toggle_button: ".menu-toggle-button",
+		  },
+		  options:{
+		    disable_scroll: true,
+		    use_handles:true,
+		  },
+		  events:{
+		    swipeLeft: function(){
+		      menu.close();
+		    },
+		    swipeRight: function(){
+		      menu.open();
+		    }
+		  }
+		}
 
     //config not required
     var mainmenu = new Menu(config);
@@ -56,31 +95,37 @@ npm install advanced-menus --save-dev
 ##### Include styles (SASS)
 
 ```cs
-@import "node_modules/advanced-menus/scss/menu";
 
 /*
 	Available themes:
     - aside-left
     - aside-right
     - plain-horizontal
+	- dropdown
 */
 
-$menu-config: (
-  aside-left: (
-    min:0px,
-    max:750px,
-    autohide: 750px
-  ),
-  aside-right: (
-    min:750px,
-    max:1024px,
-  ),
-  plain-horizontal: (
-    min:1024px
-  )
-)
+$registered-menus: (
+	main-menu: (
+		selector:"#main-menu",
+		themes:(
+			aside-left: (
+				min:0px,
+				max:750px,
+				autohide: 750px
+			),
+			aside-right: (
+				min:750px,
+				max:1024px,
+			),
+			plain-horizontal: (min:1024px)
+		)
+	)
+	//, another menu
+	//, another menu
+);
 
-@include menu( "#main-menu", $menu-config);
+@import "node_modules/advanced-menus/scss/menu";
+@include generate-menus();
 
 /*
 =============================================
@@ -90,7 +135,7 @@ USEFUL MIXINS
 // menu-breakpoint :
 // Use this mixin to add styles at the specified menu theme breakpoint
 
-@include menu-breakpoint($theme){
+@include menu-breakpoint($menu, $theme){
   //styles
 }
 
@@ -101,15 +146,15 @@ Custom themes
 */
 // ./themes/_theme-name.scss
 
-$theme: "theme-name";
-$config: map-get($menu-config, $theme);
-
-%menu-theme-#{$theme}{
-  @include menu-breakpoint($theme){
+@include register_menu_theme($some-theme-name)
 	// your styles here.
-  }
 }
 
+//probably needs some more work..
+//hides menu at certain resolution;
+@include menu-autohide($theme-name){
+	// initial styles to hide menu.
+}
 
 ```
 
