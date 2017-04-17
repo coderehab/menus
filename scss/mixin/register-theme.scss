@@ -1,0 +1,13 @@
+@mixin register_menu_theme($theme) {
+  @each $menu, $config in $registered-menus{
+
+    $selector: map_get($config, "selector");
+    $themes: map_get($config, "themes");
+
+    %menu-theme-#{$theme}-#{$menu}{
+      @include menu-breakpoint($menu, $theme){
+        @content;
+      }
+    }
+  }
+}

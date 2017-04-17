@@ -1,7 +1,17 @@
-@mixin autohide($config) {
-  @if map-has-key($config, autohide) {
-    @media screen and (max-width: map-get($config, autohide)){
-      @content;
+@mixin menu-autohide($theme) {
+  @each $menu, $config in $registered-menus{
+    $selector: map_get($config, selector);
+    $themes: map_get($config, themes);
+
+    @each $theme, $t_config in $themes{
+      @if map-has-key($t_config, autohide) {
+
+        #{$selector}{
+          @media screen and (max-width: map-get($t_config, autohide)){
+            @content;
+          }
+        }
+      }
     }
   }
 }

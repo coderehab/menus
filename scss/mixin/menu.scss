@@ -1,16 +1,11 @@
-@mixin menu($selector, $screens){
+@mixin menu($menu-name, $config){
+  $selector: map_get($config, "selector");
+  $themes: map_get($config, "themes");
+
   #{$selector} {
-    z-index: 3001;
-
-    .sub-menu{
-      visibility: hidden;
-    }
-    .active{
-      visibility: visible;
-    }
-
-    @each $theme, $size in $screens{
-      @extend %menu-theme-#{$theme}
+    @each $theme, $options in $themes{
+      @extend %menu-reset;
+      @extend %menu-theme-#{$theme}-#{$menu-name}; 
     }
   }
-};
+}

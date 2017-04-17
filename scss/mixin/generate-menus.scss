@@ -1,0 +1,5 @@
+@mixin generate-menus() {
+  @each $name, $config in $registered-menus {
+    @include menu($name, $config);
+  }
+}

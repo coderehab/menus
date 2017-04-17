@@ -1,13 +1,40 @@
-@mixin menu-breakpoint($theme) {
-  $screen: map-get($menu-config, $theme);
+@mixin menu-breakpoint($menu, $theme){
+  @if map-has-key($registered-menus, $menu){
+    $config: map_get($registered-menus, $menu);
+    $themes: map_get($config, "themes");
 
-  @if (map-has-key($screen, min) and map-has-key($screen, max)) {
-    @media screen and (min-width: #{map-get($screen, min)}) and (max-width: #{map-get($screen, max)}){ @content; }
-  }
-  @else if map-has-key($screen, min){
-    @media screen and (min-width: #{map-get($screen, min)}) { @content; }
-  }
-  @else if map-has-key($screen, max){
-    @media screen and (min-width: #{map-get($screen, max)}){ @content; }
+    @if map-has-key($themes, $theme){
+
+      $screen: map-get($themes, $theme);
+
+      @if (map-has-key($screen, min) and map-has-key($screen, max)) {
+        @media screen and (min-width: #{map-get($screen, min)}) and (max-width: #{map-get($screen, max)}){ @content; }
+      }
+      @else if map-has-key($screen, min){
+        @media screen and (min-width: #{map-get($screen, min)}) { @content; }
+      }
+      @else if map-has-key($screen, max){
+        @media screen and (min-width: #{map-get($screen, max)}){ @content; }
+      }
+    }
   }
 }
+
+
+
+// @mixin menu-breakpoint($theme, $config) {
+//   @debug $config;
+//   @if $config and map-has-key($config, $theme){
+//     $screen: map-get($config, $theme);
+//
+//     @if (map-has-key($screen, min) and map-has-key($screen, max)) {
+//       @media screen and (min-width: #{map-get($screen, min)}) and (max-width: #{map-get($screen, max)}){ @content; }
+//     }
+//     @else if map-has-key($screen, min){
+//       @media screen and (min-width: #{map-get($screen, min)}) { @content; }
+//     }
+//     @else if map-has-key($screen, max){
+//       @media screen and (min-width: #{map-get($screen, max)}){ @content; }
+//     }
+//   }
+// }

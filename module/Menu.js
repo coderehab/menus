@@ -6,7 +6,7 @@ export default class Menu {
     //init Menu
     this.menu = document.getElementById(selectors.menu_id);
     if(!this.menu) {
-      console.error("unable to find the menu with selector: " + selectors.menu);
+      console.error("unable to find the menu with selector: " + selectors.menu_id);
       return;
     };
     this.menuitems = this.menu.querySelectorAll(selectors.menuitem + ' a');

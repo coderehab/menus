@@ -1,56 +1,43 @@
-$theme: "aside-right";
-$config: map-get($menu-config, $theme);
+@include register_menu_theme("aside-right"){
+  transition: all 0.3s;
+  position: fixed;
+  top:0;
+  right:0;
+  width: 235px;
+  height:100%;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  overflow: auto;
 
-@include menu-breakpoint($theme){
-  %menu-theme-#{$theme}{
-    @include clean();
+  li {
     transition: all 0.3s;
-    position: fixed;
-    top:0;
-    right:0;
-    width: 235px;
-    height:100%;
-    background: #fff;
-    border: 1px solid #e5e5e5;
-    overflow: auto;
-
-    li {
+    a{
+      display: block;
+      padding:0.8em 1em;
+      border-bottom: 1px solid #e5e5e5;
+    }
+    ul:not(.active) li{
+      max-height: 0 !important;
+      overflow: hidden;
+    }
+    ul{
       transition: all 0.3s;
-      a{
-        display: block;
-        padding:0.8em 1em;
-        border-bottom: 1px solid #e5e5e5;
+      background: #f2f2f2;
+      transform: scaleY(0);
+      transform-origin: top;
+      &.active{
+        transform: scaleY(1);
       }
-      ul:not(.active) li{
-        max-height: 0 !important;
-        overflow: hidden;
-      }
-      ul{
-        transition: all 0.3s;
-        background: #f2f2f2;
-        transform: scaleY(0);
-        transform-origin: top;
-        &.active{
-          transform: scaleY(1);
-        }
-      }
-    }
-
-    li ul li ul{
-      background: #eaeaea;
-      li a{border-color:#ddd;}
-    }
-
-    &.active {
-      transform: translateX(0);
-      opacity: 1;
     }
   }
-}
 
-@include autohide($config){
-  %menu-theme-#{$theme}{
-    transform: translateX(-100%);
-    opacity: 0;
+  li ul li ul{
+    background: #eaeaea;
+    li a{border-color:#ddd;}
+  }
+
+  &.active {
+    transform: translateX(0);
+    opacity: 1;
   }
 }

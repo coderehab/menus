@@ -1,12 +1,8 @@
-$menu-config: (
-aside-left: (
-  min:0px,
-  max:750px,
-  autohide: 750px
-),
-aside-right: (
-  min:750px,
-  max:1024px,
-),
-plain-horizontal: (min:1024px)
+$registered-menus: (
+  main-menu: (
+    selector:"#main-menu",
+    themes:(
+      plain-horizontal: (min:1024px)
+    )
+  )
 ) !default;

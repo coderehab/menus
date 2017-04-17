@@ -1,9 +1,12 @@
 @import "settings";
 @import "mixin/clean";
+@import "mixin/register-theme";
 @import "mixin/menu-breakpoint";
 @import "mixin/autohide";
 @import "mixin/menu";
+@import "mixin/generate-menus";
 
 @import "theme/aside-left";
 @import "theme/aside-right";
 @import "theme/plain-horizontal";
+@import "theme/dropdown";

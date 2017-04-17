@@ -1,4 +1,6 @@
-@mixin clean(){
+%menu-reset {
+  z-index: 3001;
+
   ul{
     list-style:none;
     padding:0;

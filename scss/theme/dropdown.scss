@@ -1,0 +1,34 @@
+@include register_menu_theme("dropdown"){
+  ul li a{
+    display: block;
+    padding:10px;
+    border-bottom:2px solid #e5e5e5;
+    background: #f0f0f0;
+  }
+
+  ul li ul li a{
+    padding-left: 20px;
+    background: #fff;
+    border-bottom:2px solid #eee;
+  }
+
+  ul ul:not(.active) li{
+    max-height: 0 !important;
+    overflow: hidden;
+  }
+  ul ul{
+    transition: all 0.3s;
+    transform: scaleY(0);
+    transform-origin: top;
+    &.active{
+      transform: scaleY(1);
+    }
+  }
+
+  a:hover{
+    background: #0275d8;
+    color:#fff;
+    border-color: darken(#0275d8, 10%);
+  }
+
+}
