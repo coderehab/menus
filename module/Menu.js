@@ -188,7 +188,6 @@ export default class Menu {
 
     if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {
       if ( xDiff > 0 ) {
-        console.log(this.settings.events.swipeLeft);
         this.settings.events.swipeLeft();
       } else {
         this.settings.events.swipeRight();
