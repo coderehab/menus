@@ -5,7 +5,7 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: './index.js',
-  watch: false,
+  watch: true,
   output: {
     filename: 'menu.js',
     path: path.resolve(__dirname, 'dist'),
@@ -35,14 +35,6 @@ module.exports = {
     ]
   },
   plugins: [
-    new BrowserSyncPlugin ({
-      // browse to http://localhost:3000/ during development,
-      // ./public directory is being served
-      open: 'external',
-      host: 'localhost',
-      proxy: 'menus.mod',
-      files: ['resources/js/*.js', 'resources/images/**']
-    }),
     new ExtractTextPlugin({ filename: 'menu.css', disable: false, allChunks: true }),
     new webpack.optimize.UglifyJsPlugin({
       compress: { warnings: false }

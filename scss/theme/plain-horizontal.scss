@@ -3,10 +3,16 @@
     display: flex;
   }
 
+  li{
+    transition: all 0.3s;
+  }
+
   li {
     a{
-      display: block;
       padding:0.8em 1em;
+    }
+    .handle{
+      margin-left: -15px;
     }
     ul:not(.active){
       //max-height: 0!important;
@@ -32,8 +38,19 @@
     position: relative;
     a{
       border-top: 1px solid #e5e5e5;
+      width:100%;
     }
-    ul:not(.active){
+    .handle{
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 50px;
+      &:after{
+        transform: rotate(-45deg);
+      }
+    }
+    ul:not(.active) li{
       max-height: 0!important;
     }
     ul{

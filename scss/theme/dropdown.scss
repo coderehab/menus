@@ -1,34 +1,62 @@
 @include register_menu_theme("dropdown"){
-  ul li a{
-    display: block;
-    padding:10px;
-    border-bottom:2px solid #e5e5e5;
-    background: #f0f0f0;
+
+  li.active > .handle:after{
+    transform: rotate(45deg);
   }
 
-  ul li ul li a{
-    padding-left: 20px;
-    background: #fff;
-    border-bottom:2px solid #eee;
-  }
-
-  ul ul:not(.active) li{
-    max-height: 0 !important;
-    overflow: hidden;
-  }
-  ul ul{
+  li {
     transition: all 0.3s;
-    transform: scaleY(0);
-    transform-origin: top;
-    &.active{
-      transform: scaleY(1);
+    position: relative;
+    background: #ddd;
+
+    a{
+      display: block;
+      padding:0.5em 1em;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    .handle{
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 40px;
+      height:40px;
+      &:after{
+        transform: rotate(-45deg);
+      }
+    }
+    ul:not(.active) li{
+      max-height: 0 !important;
+      overflow: hidden;
+    }
+    ul{
+      transition: all 0.3s;
+      background: #f2f2f2;
+      transform: scaleY(0);
+      transform-origin: top;
+      &.active{
+        transform: scaleY(1);
+      }
     }
   }
 
-  a:hover{
-    background: #0275d8;
-    color:#fff;
-    border-color: darken(#0275d8, 10%);
+  li ul li {
+    background: #eee;
+  }
+
+  li ul li ul li{
+    background: #fff;
+  }
+
+  li ul li ul{
+    background: #eaeaea;
+    li a{border-color:#ddd;}
+  }
+
+  &.active {
+    transform: translateX(0);
+    opacity: 1;
   }
 
 }

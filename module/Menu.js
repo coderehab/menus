@@ -9,77 +9,83 @@ export default class Menu {
       console.error("unable to find the menu with selector: " + selectors.menu_id);
       return;
     };
-    this.menuitems = this.menu.querySelectorAll(selectors.menuitem + ' a');
-    this.submenus = this.menu.querySelectorAll(selectors.submenu);
 
-    if(this.menuitems.length)
-    for(var i=0; i < this.menuitems.length; i++){
-      this.menuitems[i].addEventListener("click", this.onMenuItemClick.bind(this));
+    this.menuitems = this.menu.querySelectorAll(selectors.menuitem + ' a')
+
+    //init submenus
+    this.submenus = this.menu.querySelectorAll(selectors.submenu);
+    if(this.submenus.length)
+    for(var i=0; i < this.submenus.length; i++){
+      this.submenus[i].parentNode.classList.add('am-has-children')
     }
+
+    //init menuitems
+    var handles;
+    if(this.settings.options.use_handles){
+      this.initHandles();
+      handles = this.menu.querySelectorAll(selectors.menuitem + ' .handle');
+    }else{
+      handles = this.menu.querySelectorAll(selectors.menuitem + ' a');
+    }
+
+    this.registerEventAll(handles, 'click', this.onMenuItemClick);
 
     if(this.submenus.length)
     for(var i=0; i < this.submenus.length; i++){
-      this.calculateMaxHeight(this.submenus[i]);
+      this.initSubmenu(this.submenus[i]);
     }
 
     // init toggleButtons
     this.toggleButtons = document.querySelectorAll(selectors.toggle_button);
-    if(this.toggleButtons.length)
-    for(var i=0; i < this.toggleButtons.length; i++){
-      this.toggleButtons[i].addEventListener("click", this.toggle.bind(this));
-    }
+    this.registerEventAll(this.toggleButtons, 'click', this.toggle);
 
     // init openButtons
     this.openButtons = document.querySelectorAll(selectors.open_button);
-    if(this.openButtons.length)
-    for(var i=0; i < this.openButtons.length; i++){
-      this.openButtons[i].addEventListener("click", this.open.bind(this));
-    }
+    this.registerEventAll(this.openButtons, 'click', this.open);
 
     // init closeButtons
     this.closeButtons = document.querySelectorAll(selectors.close_button);
-    if(this.closeButtons.length)
-    for(var i=0; i < this.closeButtons.length; i++){
-      this.closeButtons[i].addEventListener("click", this.close.bind(this));
-    }
+    this.registerEventAll(this.closeButtons, 'click', this.close);
 
     //init swiping
     document.addEventListener('touchstart', this.onTouchStart.bind(this), false);
     document.addEventListener('touchmove', this.onTouchMove.bind(this), false);
 
-    document.addEventListener('mousedown', function(e){
-      var hide = true; //this.menu.classList.contains('active');
-      //if(!hide) return;
-
-      for(var i = 0; i < e.path.length; i++ ){
-        if(
-          e.path[i].id == this.settings.selectors.menu_id ||
-          e.path[i].classList && e.path[i].classList.contains('menu-toggle-button')
-        )
-        hide = false;
-      }
-
-      if(hide) this.close();
-    }.bind(this))
+    //document click
+    if(this.settings.options.autoclose)
+    document.addEventListener('mousedown', this.documentClick.bind(this))
   }
 
   config (args = {}) {
     var defaultConfig = this.settings || {
-      submenu:{
-        can_open_multiple: false,
+      options:{
+        disable_scroll: false,
+        autoclose: true,
+        use_handles: true,
+      },
+      events: {
+        swipeLeft: function(){},
+        swipeRight: function(){},
+        swipeUp: function(){},
+        swipeDown: function(){}
       },
       selectors:{
         menu_id: 'main-menu',
         menuitem: 'li',
-        submenu: '.menu-item > ul',
-        toggle_button: '.menu-toggle-button',
-        open_button: '.menu-open-button',
-        close_button: '.menu-close-button',
+        submenu: 'li > ul',
+        toggle_button: false,
+        open_button: false,
+        close_button: false,
       }
     }
 
-    for (var setting in defaultConfig){
-      if(args[setting]) defaultConfig[setting] = args[setting];
+    for (var config in defaultConfig){
+      if(typeof defaultConfig[config] == "object" && args[config])
+      for (var opt in defaultConfig[config]){
+        if(typeof args[config][opt] != "undefined") {
+          defaultConfig[config][opt] = args[config][opt];
+        }
+      }
     }
 
     this.settings = defaultConfig;
@@ -88,6 +94,12 @@ export default class Menu {
   }
 
   onMenuItemClick (e){
+    var is_active = e.target.parentNode.classList.contains("active");
+    var submenuitems = e.target.parentNode.parentNode.querySelectorAll('.am-has-children')
+    for(var i = 0; i < submenuitems.length; i++){
+      submenuitems[i].classList.remove('active')
+    }
+    if(!is_active) e.target.parentNode.classList.add("active");
     var submenu = e.target.parentNode.querySelector(this.settings.selectors.submenu);
     if(!submenu) {
       this.close();
@@ -95,13 +107,18 @@ export default class Menu {
     }
 
     e.preventDefault();
+    e.target.parentNode.removeAttribute("style")
     this.toggleSubmenu(submenu);
   }
 
   toggle(){
     this.menu.classList.toggle('active')
+    document.body.classList.toggle('am-menu-active');
+    document.body.classList.toggle('menu-'+ this.settings.selectors.menu_id + '-active');
+
+    if(this.settings.options.disable_scroll)
     document.body.classList.toggle('scroll-disabled');
-    document.body.classList.toggle('menu-open');
+
     if(!this.menu.classList.contains('active')){
       for(var i = 0; i < this.submenus.length; i++){
         this.closeSubmenu(this.submenus[i]);
@@ -111,17 +128,31 @@ export default class Menu {
 
   open(){
     this.menu.classList.add('active')
+    document.body.classList.add('am-menu-active');
+    document.body.classList.add('menu-'+ this.settings.selectors.menu_id + '-active');
+
+    if(this.settings.options.disable_scroll)
     document.body.classList.add('scroll-disabled');
-    document.body.classList.add('menu-open');
   }
 
   close(){
+    var submenuitems = this.menu.querySelectorAll('.am-has-children')
+    for(var i = 0; i < submenuitems.length; i++){
+      submenuitems[i].classList.remove('active')
+    }
+
     for(var i = 0; i < this.submenus.length; i++){
       this.closeSubmenu(this.submenus[i]);
     }
-    this.menu.classList.remove('active')
-    document.body.classList.remove('scroll-disabled');
-    document.body.classList.remove('menu-open');
+
+    if(this.menu.classList.contains('active')){
+      this.menu.classList.remove('active')
+      document.body.classList.remove('am-menu-active');
+      document.body.classList.remove('menu-'+ this.settings.selectors.menu_id + '-active');
+
+      if(this.settings.options.disable_scroll)
+      document.body.classList.remove('scroll-disabled');
+    }
   }
 
   toggleSubmenu(submenu){
@@ -157,15 +188,16 @@ export default class Menu {
 
     if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {
       if ( xDiff > 0 ) {
-        this.onSwipeLeft();
+        console.log(this.settings.events.swipeLeft);
+        this.settings.events.swipeLeft();
       } else {
-        this.onSwipeRight();
+        this.settings.events.swipeRight();
       }
     } else {
       if ( yDiff > 0 ) {
-        this.onSwipeUp();
+        this.settings.events.swipeUp();
       } else {
-        this.onSwipeDown();
+        this.settings.events.swipeDown();
       }
     }
 
@@ -174,36 +206,26 @@ export default class Menu {
     this.yDown = null;
   }
 
-  onSwipeLeft(){
-    this.close();
-  }
-
-  onSwipeRight(){
-    this.open();
-  }
-
-  onSwipeUp(){}
-
-  onSwipeDown(){}
-
   can_open_multiple(parentMenu){
-    if(!this.settings.submenu.can_open_multiple){
-      for(var i = 0; i < this.submenus.length; i++){
-        if(parentMenu != this.submenus[i])
-          this.closeSubmenu(this.submenus[i]);
-      }
+    for(var i = 0; i < this.submenus.length; i++){
+      if(parentMenu != this.submenus[i])
+      this.closeSubmenu(this.submenus[i]);
     }
   }
 
-  calculateMaxHeight(submenu) {
+  initSubmenu(submenu) {
     submenu.classList.add('active');
-    var menuitems = submenu.children;
+
     for (var i = 0; i< this.menuitems.length; i++){
       if(this.closest(this.menuitems[i], 'sub-menu'))
-      this.menuitems[i].parentNode.style.maxHeight = this.menuitems[i].clientHeight + "px"
+      var elHeight = this.menuitems[i].offsetHeight;
+      elHeight += parseInt(window.getComputedStyle(this.menuitems[i]).getPropertyValue('margin-top'));
+      elHeight += parseInt(window.getComputedStyle(this.menuitems[i]).getPropertyValue('margin-bottom'));
+
+      this.menuitems[i].parentNode.style.maxHeight = elHeight + "px"
     }
+
     submenu.classList.remove('active');
-    //submenu.style.maxHeight = menuitems.length*menuitems[0].clientHeight + "px";
   }
 
   closest(el, classname) {
@@ -219,4 +241,35 @@ export default class Menu {
       return false;
     }
   }
+
+  documentClick (e){
+    var hide = true;
+
+    for(var i = 0; i < e.path.length; i++ ){
+      if(
+        e.path[i].id == this.settings.selectors.menu_id ||
+        e.path[i].classList && e.path[i].classList.contains('menu-toggle-button')
+      )
+      hide = false;
+    }
+
+    if(hide) this.close();
+  }
+
+  registerEventAll (elements, eventname, callback){
+    if(elements.length)
+    for(var i=0; i < elements.length; i++){
+      elements[i].addEventListener(eventname, callback.bind(this));
+    }
+  }
+
+  initHandles(){
+    var menuitems = this.menu.querySelectorAll('.am-has-children');
+    for (var i=0; i < menuitems.length; i++){
+      var handle = document.createElement('span');
+      handle.classList.add('handle');
+      menuitems[i].insertBefore(handle, menuitems[i].children[1]);
+    }
+  }
+
 }
