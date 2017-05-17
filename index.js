@@ -1,2 +1,2 @@
-import Menu from "./module/Menu.js";
-module.exports = Menu;
+var Menu = require("./module/menu")
+module.exports = Menu.default;
