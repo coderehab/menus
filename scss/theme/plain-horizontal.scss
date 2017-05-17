@@ -14,9 +14,6 @@
     .handle{
       margin-left: -15px;
     }
-    ul:not(.active){
-      //max-height: 0!important;
-    }
     ul{
       position: absolute;
       transition: all 0.3s;
@@ -28,9 +25,10 @@
       transform: scaleY(0);
       border: 1px solid #e5e5e5;
       border-top: none;
-      &.active{
-        transform: scaleY(1);
-      }
+    }
+
+    &:hover > ul, ul.active{
+      transform: scaleY(1);
     }
   }
 
@@ -49,9 +47,6 @@
       &:after{
         transform: rotate(-45deg);
       }
-    }
-    ul:not(.active) li{
-      max-height: 0!important;
     }
     ul{
       top:0;

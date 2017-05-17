@@ -21,7 +21,7 @@ export default class Menu {
 
     //init menuitems
     var handles;
-    if(this.settings.options.use_handles){
+    if(this.settings.options.parent_clickable){
       this.initHandles();
       handles = this.menu.querySelectorAll(selectors.menuitem + ' .handle');
     }else{
@@ -59,9 +59,9 @@ export default class Menu {
   config (args = {}) {
     var defaultConfig = this.settings || {
       options:{
-        disable_scroll: false,
+        disable_page_scroll: false,
         autoclose: true,
-        use_handles: true,
+        parent_clickable: false,
       },
       events: {
         swipeLeft: function(){},
@@ -89,7 +89,6 @@ export default class Menu {
     }
 
     this.settings = defaultConfig;
-    console.log("Config::", this.settings);
     return this;
   }
 
@@ -116,7 +115,7 @@ export default class Menu {
     document.body.classList.toggle('am-menu-active');
     document.body.classList.toggle('menu-'+ this.settings.selectors.menu_id + '-active');
 
-    if(this.settings.options.disable_scroll)
+    if(this.settings.options.disable_page_scroll)
     document.body.classList.toggle('scroll-disabled');
 
     if(!this.menu.classList.contains('active')){
@@ -131,7 +130,7 @@ export default class Menu {
     document.body.classList.add('am-menu-active');
     document.body.classList.add('menu-'+ this.settings.selectors.menu_id + '-active');
 
-    if(this.settings.options.disable_scroll)
+    if(this.settings.options.disable_page_scroll)
     document.body.classList.add('scroll-disabled');
   }
 
@@ -150,7 +149,7 @@ export default class Menu {
       document.body.classList.remove('am-menu-active');
       document.body.classList.remove('menu-'+ this.settings.selectors.menu_id + '-active');
 
-      if(this.settings.options.disable_scroll)
+      if(this.settings.options.disable_page_scroll)
       document.body.classList.remove('scroll-disabled');
     }
   }
@@ -188,15 +187,15 @@ export default class Menu {
 
     if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {
       if ( xDiff > 0 ) {
-        this.settings.events.swipeLeft();
+        this.settings.events.swipeLeft(this, evt);
       } else {
-        this.settings.events.swipeRight();
+        this.settings.events.swipeRight(this, evt);
       }
     } else {
       if ( yDiff > 0 ) {
-        this.settings.events.swipeUp();
+        this.settings.events.swipeUp(this, evt);
       } else {
-        this.settings.events.swipeDown();
+        this.settings.events.swipeDown(this, evt);
       }
     }
 

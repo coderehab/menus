@@ -13,9 +13,8 @@
     vertical-align: middle;
   }
 
-  ul ul{
-    visibility: hidden;
-    &.active{
+  ul li{
+    &:hover > ul, ul.active{
       visibility: visible;
     }
   }

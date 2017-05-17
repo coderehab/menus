@@ -44,9 +44,9 @@ DEFAULT CONFIG
 
 {
 	options:{
-		disable_scroll: false,
+		disable_page_scroll: false,
 		autoclose: true,
-		use_handles: true,
+		parent_clickable: true
 	},
 	events: {
 		swipeLeft: function(){},
@@ -66,29 +66,29 @@ DEFAULT CONFIG
 
 */
 
-	const Menu = require('advanced-menus');
+const Menu = require('advanced-menus');
 
-    //menu config;
-    var config = {
-		  selectors:{
-		    toggle_button: ".menu-toggle-button",
-		  },
-		  options:{
-		    disable_scroll: true,
-		    use_handles:true,
-		  },
-		  events:{
-		    swipeLeft: function(){
-		      menu.close();
-		    },
-		    swipeRight: function(){
-		      menu.open();
-		    }
-		  }
+//menu config;
+var config = {
+	selectors:{
+		toggle_button: ".menu-toggle-button",
+	},
+	options:{
+		disable_scroll: true,
+		parent_clickable:true,
+	},
+	events:{
+		swipeLeft: function(menu, e){
+			menu.close();
+		},
+		swipeRight: function(menu, e){
+			menu.open();
 		}
+	}
+}
 
-    //config not required
-    var mainmenu = new Menu(config);
+//config not required
+var mainmenu = new Menu(config);
 
 ```
 
@@ -97,26 +97,29 @@ DEFAULT CONFIG
 ```cs
 
 /*
-	Available themes:
-    - aside-left
-    - aside-right
-    - plain-horizontal
-	- dropdown
+Available themes:
+- aside-left
+- aside-right
+- plain-horizontal
+- dropdown
 */
 
 $registered-menus: (
 	main-menu: (
 		selector:"#main-menu",
 		themes:(
+
 			aside-left: (
 				min:0px,
 				max:750px,
 				autohide: 750px
 			),
+
 			aside-right: (
 				min:750px,
 				max:1024px,
 			),
+
 			plain-horizontal: (min:1024px)
 		)
 	)
@@ -132,11 +135,12 @@ $registered-menus: (
 USEFUL MIXINS
 =============================================
 */
+
+// experimental
 // menu-breakpoint :
 // Use this mixin to add styles at the specified menu theme breakpoint
-
 @include menu-breakpoint($menu, $theme){
-  //styles
+	//styles
 }
 
 /*
@@ -144,13 +148,14 @@ USEFUL MIXINS
 Custom themes
 =============================================
 */
-// ./themes/_theme-name.scss
 
+// experimental
+// ./themes/_theme-name.scss
 @include register_menu_theme($some-theme-name)
-	// your styles here.
+// your styles here.
 }
 
-//probably needs some more work..
+// experimental
 //hides menu at certain resolution;
 @include menu-autohide($theme-name){
 	// initial styles to hide menu.
@@ -162,36 +167,36 @@ Custom themes
 
 ``` html
 <nav id="main-menu">
-  <ul class='menu'>
-    <li class="menu-item">
-      <a href="#item1">Item 1</a>
-      <ul class='sub-menu'>
-        <li class="menu-item"><a href="#item1">Item 1</a></li>
-        <li class="menu-item">
-          <a href="#item2">Item 2</a>
-          <ul class='sub-menu'>
-            <li class="menu-item"><a href="#item1">Item 1</a></li>
-            <li class="menu-item"><a href="#item2">Item 2</a></li>
-            <li class="menu-item"><a href="#item3">Item 3</a></li>
-            <li class="menu-item"><a href="#item4">Item 4</a></li>
-            <li class="menu-item"><a href="#item5">Item 5</a></li>
-          </ul>
-        </li>
-        <li class="menu-item"><a href="#item1">Item 3</a></li>
-        <li class="menu-item"><a href="#item2">Item 4</a></li>
-        <li class="menu-item"><a href="#item3">Item 5</a></li>
-      </ul>
-    </li>
-    <li class="menu-item">
-      <a href="#item2">Item 2</a>
-      <ul class='sub-menu'>
-        <li class="menu-item"><a href="#item1">Item 1</a></li>
-        <li class="menu-item"><a href="#item2">Item 2</a></li>
-      </ul>
-    </li>
-    <li class="menu-item"><a href="#item3">Item 3</a></li>
-    <li class="menu-item"><a href="#item4">Item 4</a></li>
-  </ul>
+	<ul class='menu'>
+		<li class="menu-item">
+			<a href="#item1">Item 1</a>
+			<ul class='sub-menu'>
+				<li class="menu-item"><a href="#item1">Item 1</a></li>
+				<li class="menu-item">
+					<a href="#item2">Item 2</a>
+					<ul class='sub-menu'>
+						<li class="menu-item"><a href="#item1">Item 1</a></li>
+						<li class="menu-item"><a href="#item2">Item 2</a></li>
+						<li class="menu-item"><a href="#item3">Item 3</a></li>
+						<li class="menu-item"><a href="#item4">Item 4</a></li>
+						<li class="menu-item"><a href="#item5">Item 5</a></li>
+					</ul>
+				</li>
+				<li class="menu-item"><a href="#item1">Item 3</a></li>
+				<li class="menu-item"><a href="#item2">Item 4</a></li>
+				<li class="menu-item"><a href="#item3">Item 5</a></li>
+			</ul>
+		</li>
+		<li class="menu-item">
+			<a href="#item2">Item 2</a>
+			<ul class='sub-menu'>
+				<li class="menu-item"><a href="#item1">Item 1</a></li>
+				<li class="menu-item"><a href="#item2">Item 2</a></li>
+			</ul>
+		</li>
+		<li class="menu-item"><a href="#item3">Item 3</a></li>
+		<li class="menu-item"><a href="#item4">Item 4</a></li>
+	</ul>
 </nav>
 
 <button class="menu-toggle-button">=</button>
