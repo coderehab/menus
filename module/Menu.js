@@ -62,7 +62,7 @@ export default class Menu {
       document.addEventListener("mousedown", this.documentClick.bind(this));
   }
 
-  config(args = {}) {
+  config(args) {
     var defaultConfig = this.settings || {
       options: {
         disable_page_scroll: false,
@@ -264,10 +264,8 @@ export default class Menu {
   documentClick(e) {
     var hide = true;
     var path = e.path || e.composedPath();
-    alert("click");
-    // var path = e.path;
     for (var i = 0; i < path.length; i++) {
-      // alert(path[i].classList);
+      // alert(path[i].classList); 
       if (
         path[i].id == this.settings.selectors.menu_id ||
         // path[i].classList && path[i].classList.contains('menu-toggle-button')
