@@ -1,6 +1,6 @@
 {
   "name": "advanced-menus",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Easy to use and configurable HTML5 Menus",
   "main": "index.js",
   "scripts": {
