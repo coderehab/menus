@@ -80,6 +80,21 @@ export class Menu {
     // init closeButtons
     this.closeButtons = document.querySelectorAll(this.selectors.close_button);
     this.registerEventAll(this.closeButtons, "click", this.close);
+
+    //init swiping
+    document.addEventListener(
+      "touchstart",
+      this.onTouchStart.bind(this),
+      false
+    );
+    document.addEventListener("touchmove", this.onTouchMove.bind(this), false);
+
+    // Onderstaand triggert bij het klikken op het menu icon een dubbele interactie
+    // want er gaat een mousedown af en op het menu zelf zit een toggle, TODO FIX
+
+    // //document click
+    if (this.config.options.autoclose)
+      document.addEventListener("mousedown", this.documentClick.bind(this));
   }
 
   onMenuItemClick(e: any) {
@@ -254,7 +269,7 @@ export class Menu {
       if (
         single_path.id == this.config.selectors.menu_id ||
         (single_path.classList &&
-          single_path.classList.contains("toggle-mainmenu-button"))
+          single_path.classList.contains("menu-toggle-button"))
       ) {
         hide = false;
       }
