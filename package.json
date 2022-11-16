@@ -22,7 +22,7 @@
   "homepage": "https://github.com/coderehab/menus#readme",
   "devDependencies": {
     "babel-core": "^6.24.1",
-    "babel-loader": "^6.4.1",
+    "babel-loader": "^9.1.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-es2015-webpack": "^6.4.3",
     "babel-preset-stage-0": "^6.24.1",
@@ -33,6 +33,6 @@
     "node-sass": "^4.5.2",
     "sass-loader": "^6.0.3",
     "style-loader": "^0.16.1",
-    "webpack": "^2.3.3"
+    "webpack": "^5.75.0"
   }
 }
