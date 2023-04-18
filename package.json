@@ -28,7 +28,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "browser-sync": "^2.18.8",
     "browser-sync-webpack-plugin": "^1.1.4",
-    "css-loader": "^0.28.0",
+    "css-loader": "^6.7.3",
     "extract-text-webpack-plugin": "^2.1.0",
     "node-sass": "^4.5.2",
     "sass-loader": "^6.0.3",
